@@ -91,7 +91,28 @@ def load_namelist(db):
 def load_cjk(db):
     buffer = BytesIO()
     download_to_buffer('http://www.unicode.org/Public/UNIDATA/Unihan.zip', buffer)
-    count = 0
+    count = [0]
+    lastchar = None
+    definition = [None]
+    mandarin = [None]
+    def savelast():
+        if lastchar is None:
+            return
+        text = []
+        if definition[0] is not None:
+            text.append('Character Meaning: ' + definition[0])
+        if mandarin[0] is not None:
+            text.append('Pronunciation: ' + mandarin[0])
+        id, block = db.execute('''SELECT id, name FROM blocks WHERE ?
+                                    BETWEEN start AND end''', (char,)).fetchone()
+        db.execute('''INSERT OR REPLACE INTO codepoints(id, desc, bid, block)
+                        VALUES (?, ?, ?, ?)''', (char, '\n'.join(text), id, block))
+        definition[0] = None
+        mandarin[0] = None
+        count[0] += 1
+        if count[0] & 0xFF == 0:
+            print('Done CJK: {}'.format(count[0]), end='\r')
+
     with zipfile.ZipFile(buffer) as zip:
         for line in codecs.getreader('utf-8')(zip.open('Unihan_Readings.txt')):
             if line.startswith('#'):
@@ -100,32 +121,36 @@ def load_cjk(db):
             if not line:
                 continue
             char, type, data = line.split('\t')
+            char = hexint(char[2:])
+            if char != lastchar:
+                savelast()
+                lastchar = char
             if type == 'kDefinition':
-                char = hexint(char[2:])
-                id, block = db.execute('''SELECT id, name FROM blocks WHERE ?
-                                            BETWEEN start AND end''', (char,)).fetchone()
-                db.execute('''INSERT OR REPLACE INTO codepoints(id, desc, bid, block)
-                                VALUES (?, ?, ?, ?)''', (char,
-                            'Character Meaning: ' + data, id, block))
-                count += 1
-                if count & 0xFF == 0:
-                    print('Done CJK: {}'.format(count), end='\r')
+                definition[0] = data
+            elif type == 'kMandarin':
+                mandarin[0] = data
+    savelast()
     db.commit()
-    print('Done CJK: {}'.format(count))
+    print('Done CJK: {}'.format(count[0]))
 
 def download_to_buffer(url, buffer):
+    import time
+    
     data = urlopen(url)
     size = int(data.info().getheaders('Content-Length')[0])
     print('Downloading {}, Size: {:,d}'.format(url.split('/')[-1], size))
     downloaded = 0
-    block = 8192
+    block = 65536
+    start = time.clock()
     while True:
         buf = data.read(block)
         if not buf:
             break
         downloaded += len(buf)
         buffer.write(buf)
-        print('{:15,d} [{:6.2f}%]'.format(downloaded, downloaded * 100. / size), end='\r')
+        print('{:15,d} [{:6.2f}%] {:9.2f} kB/s'.format(
+                    downloaded, downloaded * 100. / size,
+                    downloaded / 1024. / (time.clock() - start)), end='\r')
     print('{:15,d} [100.00%]'.format(downloaded))
     data.close()
 
