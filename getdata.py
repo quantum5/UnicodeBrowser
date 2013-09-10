@@ -155,7 +155,6 @@ def download_to_buffer(url, buffer):
     data.close()
 
 def main():
-    import time
     db = sqlite3.connect('data/unicode.db')
     create_blocks(db)
     create_codetable(db)
