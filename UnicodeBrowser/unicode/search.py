@@ -4,9 +4,12 @@ import re
 __author__ = 'xiaomao'
 
 
-def search(keyword):
+def search(keyword, start=None, limit=None):
+    if start is None:
+        start = 0
+    piece = slice(start, (start + limit) if limit is not None else None)
     try:
-        points = list(CodePoint.objects.filter(description__search=keyword).all())
+        points = list(CodePoint.objects.filter(description__search=keyword)[piece].all())
     except NotImplementedError:
         words = keyword.split()
         blacklist = []
@@ -28,7 +31,7 @@ def search(keyword):
                     yield point
 
         if blacklist:
-            points = list(gen())
+            points = list(gen())[piece]
         else:
-            points = list(query.all())
+            points = list(query[piece].all())
     return points

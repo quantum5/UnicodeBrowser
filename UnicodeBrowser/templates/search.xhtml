@@ -1,0 +1,49 @@
+{% extends "base.xhtml" %}
+
+{% block title %}Search{% endblock %}
+
+{% load unicode %}
+
+{% block body %}
+    <form action="">
+        <label for="text">Search:</label>
+        <input type="text" name="q" id="text" value="{{ query|escape }}"></input>
+        <input type="submit" value="Search"></input>
+    </form>
+    <hr/>
+
+    <table class="codepoints">
+        <thead><tr>
+            <td>Char</td>
+            <td>Description</td>
+            <td>Block</td>
+        </tr></thead>
+        <tbody>
+            {% for point in codepoints %}
+                <tr>
+                    <td>{{ point.id|to_entity }}</td>
+                    <td>{{ point.description|escape|to_br }}</td>
+                    <td>{{ point.block.fullname|escape }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if query %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if codepoints.has_previous %}
+                    <a href="?q={{ query|escape }}&amp;page={{ codepoints.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ codepoints.number }} of {{ codepoints.paginator.num_pages }}.
+                </span>
+
+                {% if codepoints.has_next %}
+                    <a href="?q={{ query|escape }}&amp;page={{ codepoints.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}

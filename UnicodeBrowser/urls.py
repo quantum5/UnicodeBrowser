@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Examples:
 
     url(r'^json-search/(.*)$', 'UnicodeBrowser.unicode.views.json_search'),
-    # url(r'^$', 'UnicodeBrowser.views.home', name='home'),
+    url(r'^$', 'UnicodeBrowser.unicode.views.search'),
     # url(r'^UnicodeBrowser/', include('UnicodeBrowser.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
