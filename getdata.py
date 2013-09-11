@@ -55,9 +55,12 @@ def load_namelist(db):
         line = line.strip('\n')
         codepoint = recodepoint.match(line)
         if line.startswith('@@\t'):
+            savelast()
+            lastch = None
             # New block
             if lastblockname is not None:
                 print('Done block: {}, {:d} chars'.format(lastblockname, chars))
+
             start, name, end = line[3:].split('\t')
             redata = reblockname.search(name)
             if redata:
