@@ -1,6 +1,6 @@
 # Django settings for UnicodeBrowser project.
 
-DEBUG = True
+DEBUG = True # Remember to change ALLOWED_HOSTS when changing this to false
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -120,7 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'UnicodeBrowser',
+    'UnicodeBrowser.unicode',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
