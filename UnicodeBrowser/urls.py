@@ -6,6 +6,8 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
+
+    url(r'^json-search/(.*)$', 'UnicodeBrowser.unicode.views.json_search'),
     # url(r'^$', 'UnicodeBrowser.views.home', name='home'),
     # url(r'^UnicodeBrowser/', include('UnicodeBrowser.foo.urls')),
 
