@@ -126,23 +126,29 @@ class Command(BaseCommand):
         self.stdout.write('Done CJK: {}'.format(count[0]))
 
     def download_to_buffer(self, url, buffer):
-        import time
+        import time, os
+        proper_time = time.clock if os.name == 'nt' else time.time
 
         data = urlopen(url)
         size = int(data.info().getheaders('Content-Length')[0])
         self.stdout.write('Downloading {}, Size: {:,d}'.format(url.split('/')[-1], size))
         downloaded = 0
         block = 65536
-        start = time.clock()
+        start = proper_time()
         while True:
             buf = data.read(block)
             if not buf:
                 break
             downloaded += len(buf)
             buffer.write(buf)
+            dt = proper_time() - start
+            if dt == 0:
+                # divding by something really close then
+                # and dude, get a slower compuoter
+                dt = 0.00001
             self.stdout.write('{:15,d} [{:6.2f}%] {:9.2f} kB/s'.format(
                               downloaded, downloaded * 100. / size,
-                              downloaded / 1024. / (time.clock() - start)), ending='\r')
+                              downloaded / 1024. / dt), ending='\r')
         self.stdout.write('{:15,d} [100.00%]'.format(downloaded))
         data.close()
 
