@@ -6,12 +6,14 @@
 {% load static from staticfiles %}
 
 {% block head %}
-  {% if fonts %}
-    <style type="text/css">
+  <style type="text/css">
     .charview {
         font-size: 300%;
         text-align: center;
     }
+  </style>
+  {% if fonts %}
+    <style type="text/css">
     .ajax_loader {
         position: fixed;
         left: 50%;

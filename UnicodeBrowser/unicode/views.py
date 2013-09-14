@@ -16,7 +16,7 @@ def json_search(request, keyword):
 
 def search(request):
     context = {}
-    if 'q' in request.GET:
+    if 'q' in request.GET and request.GET['q']:
         paginator = Paginator(UnicodeBrowser.unicode.search.search(request.GET['q']), 50)
         page = request.GET.get('page')
         try:
@@ -31,6 +31,7 @@ def search(request):
             if point.block.font is not None:
                 fonts.add(point.block.font)
     return render_to_response('search.xhtml', context)
+
 
 def fonts(request):
     return render_to_response('fonts.css', dict(fonts=Font.objects.all()), mimetype='text/css')
