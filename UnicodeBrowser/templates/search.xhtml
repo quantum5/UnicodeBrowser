@@ -3,6 +3,23 @@
 {% block title %}Search{% endblock %}
 
 {% load unicode %}
+{% load static from staticfiles %}
+
+{% block head %}
+    <style type="text/css">
+    .charview {
+        font-size: 300%;
+        text-align: center;
+    }
+
+    {% for font in fonts %}
+        @font-face {
+            font-family: '{{ font.name }}';
+            src: local('{{ font.name }}'), url('{% static font.file %}');
+        }
+    {% endfor %}
+    </style>
+{% endblock %}
 
 {% block body %}
     <form action="">
@@ -10,9 +27,11 @@
         <input type="text" name="q" id="text" value="{{ query|escape }}"></input>
         <input type="submit" value="Search"></input>
     </form>
+
+  {% if codepoints %}
     <hr/>
 
-    <table class="codepoints">
+    <table class="codepoints" border="1">
         <thead><tr>
             <td>Char</td>
             <td>Description</td>
@@ -21,7 +40,11 @@
         <tbody>
             {% for point in codepoints %}
                 <tr>
-                    <td>{{ point.id|to_entity }}</td>
+                    {% if point.block.font %}
+                    <td class="charview" style="font-family: {{ point.block.font.name }}, sans-serif">{{ point.id|to_entity }}</td>
+                    {% else %}
+                    <td class="charview">{{ point.id|to_entity }}</td>
+                    {% endif %}
                     <td>{{ point.description|escape|to_br }}</td>
                     <td>{{ point.block.fullname|escape }}</td>
                 </tr>
@@ -46,4 +69,5 @@
             </span>
         </div>
     {% endif %}
+  {% endif %}
 {% endblock %}

@@ -25,4 +25,8 @@ def search(request):
         except EmptyPage:
             context['codepoints'] = paginator.page(paginator.num_pages)
         context['query'] = request.GET['q']
+        context['fonts'] = fonts = set()
+        for point in context['codepoints']:
+            if point.block.font is not None:
+                fonts.add(point.block.font)
     return render_to_response('search.xhtml', context)
