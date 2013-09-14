@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # Examples:
 
     url(r'^json-search/(.*)$', 'UnicodeBrowser.unicode.views.json_search'),
+    url(r'fonts.css', 'UnicodeBrowser.unicode.views.fonts'),
     url(r'^$', 'UnicodeBrowser.unicode.views.search'),
     # url(r'^UnicodeBrowser/', include('UnicodeBrowser.foo.urls')),
 

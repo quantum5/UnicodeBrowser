@@ -6,19 +6,46 @@
 {% load static from staticfiles %}
 
 {% block head %}
+  {% if fonts %}
     <style type="text/css">
     .charview {
         font-size: 300%;
         text-align: center;
     }
-
-    {% for font in fonts %}
-        @font-face {
-            font-family: '{{ font.name }}';
-            src: local('{{ font.name }}'), url('{% static font.file %}');
-        }
-    {% endfor %}
+    .ajax_loader {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
+        background: url('{% static 'loading.gif' %}') no-repeat center center transparent;
+    }
     </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+    __loaded_fonts = false;
+    $(function() {
+        if (!__loaded_fonts)
+            $('body').append($('<div></div>').addClass('ajax_loader'));
+    });
+    WebFontConfig = {
+      custom: {
+        families: [
+        {% for font in fonts %}
+          '{{ font.name }}',
+        {% endfor %}
+        ],
+        urls: ['/fonts.css']
+      },
+      active: function() {
+        $('div.ajax_loader').remove();
+        __loaded_fonts = true;
+      }
+    };
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+  {% endif %}
 {% endblock %}
 
 {% block body %}

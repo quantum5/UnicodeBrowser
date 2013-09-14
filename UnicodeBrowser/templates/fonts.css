@@ -1,0 +1,7 @@
+{% load static from staticfiles %}
+{% for font in fonts %}
+@font-face {
+    font-family: '{{ font.name }}';
+    src: local('{{ font.name }}'), url('{% static font.file %}');
+}
+{% endfor %}

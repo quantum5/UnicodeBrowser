@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from UnicodeBrowser.unicode.models import Font
 import UnicodeBrowser.unicode.search
 
 import json
@@ -30,3 +31,7 @@ def search(request):
             if point.block.font is not None:
                 fonts.add(point.block.font)
     return render_to_response('search.xhtml', context)
+
+def fonts(request):
+    return render_to_response('fonts.css', dict(fonts=Font.objects.all()), mimetype='text/css')
+
