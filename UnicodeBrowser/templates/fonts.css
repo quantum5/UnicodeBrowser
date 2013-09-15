@@ -1,7 +1,7 @@
-{% load static from staticfiles %}
+{% load unicode %}
 {% for font in fonts %}
 @font-face {
     font-family: '{{ font.name }}';
-    src: local('{{ font.name }}'), url('{% static font.file %}');
+    src: local('{{ font.name }}'), url('{% staticV font.file %}');
 }
 {% endfor %}

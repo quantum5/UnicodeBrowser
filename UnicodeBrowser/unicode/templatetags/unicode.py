@@ -1,11 +1,15 @@
+import os
+
 from django import template
+from django.contrib.staticfiles import finders
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
+from django.conf import settings
 
 __author__ = 'xiaomao'
 
-
 register = template.Library()
+
 
 @register.filter(name='to_entity')
 def to_entity(value):
@@ -16,3 +20,12 @@ def to_entity(value):
 @stringfilter
 def to_br(value):
     return mark_safe(value.replace('\n', '<br/>'))
+
+
+@register.simple_tag
+def staticV(path):
+    try:
+        time = int(os.path.getmtime(finders.find(path)))
+        return '%s%s?%s' % (settings.STATIC_URL, path, time)
+    except OSError:
+        return '%s%s' % (settings.STATIC_URL, path)
