@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.views.decorators.cache import cache_page
 from UnicodeBrowser.unicode.models import Font
 import UnicodeBrowser.unicode.search
 
@@ -32,7 +33,7 @@ def search(request):
                 fonts.add(point.block.font)
     return render_to_response('search.xhtml', context)
 
-
+@cache_page(None)
 def fonts(request):
     return render_to_response('fonts.css', dict(fonts=Font.objects.all()), mimetype='text/css')
 
