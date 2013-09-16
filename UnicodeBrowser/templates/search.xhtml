@@ -70,7 +70,7 @@
                     {% else %}
                     <td class="charview">{{ point.id|to_entity }}</td>
                     {% endif %}
-                    <td>{{ point.description|escape|to_br }}</td>
+                    <td>{{ point.description|linebreaksbr|escape }}</td>
                     <td>{{ point.block.fullname|escape }}</td>
                 </tr>
             {% endfor %}
