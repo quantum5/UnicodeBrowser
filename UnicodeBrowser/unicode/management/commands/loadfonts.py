@@ -41,6 +41,12 @@ class Command(BaseCommand):
                     object.font = font
                     object.save()
                 self.stdout.write('Added font: {}'.format(font.name))
+
+                eot = 'font/{}.eot'.format(font.name)
+                if finders.find(eot) is not None:
+                    font.eot = eot
+                    font.save()
+                    self.stdout.write('Found EOT version of: {}'.format(font.name))
         except Exception:
             import traceback
             traceback.print_exc()
@@ -48,6 +54,8 @@ class Command(BaseCommand):
             raise
         else:
             transaction.commit()
+
+    formats = ['']
 
     fontdata = {
         'Symbola': [

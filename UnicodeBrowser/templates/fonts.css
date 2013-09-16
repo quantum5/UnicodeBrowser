@@ -2,6 +2,7 @@
 {% for font in fonts %}
 @font-face {
     font-family: '{{ font.name }}';
+    {% if font.eot %}src: url('{% staticV font.eot %}');{% endif %}
     src: local('{{ font.name }}'), url('{% staticV font.file %}');
 }
 {% endfor %}

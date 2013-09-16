@@ -7,6 +7,7 @@ class Font(models.Model):
     short = models.CharField('Font ID', max_length=15)
     name = models.CharField('Font name', max_length=30)
     file = models.CharField('File name', max_length=256)
+    eot = models.CharField('EOT file name', max_length=256, null=True)
 
 
 class Block(models.Model):
