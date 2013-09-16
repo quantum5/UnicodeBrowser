@@ -18,7 +18,7 @@ def json_search(request, keyword):
 def search(request):
     context = {}
     if 'q' in request.GET and request.GET['q']:
-        paginator = Paginator(UnicodeBrowser.unicode.search.search(request.GET['q']), 50)
+        paginator = Paginator(UnicodeBrowser.unicode.search.search(request.GET['q']), 200)
         page = request.GET.get('page')
         try:
             context['codepoints'] = paginator.page(page)
