@@ -1,17 +1,17 @@
 {% extends "base.xhtml" %}
 
-{% block title %}Search{% endblock %}
+{% block title %}{% if query %}{{ query }} - {% endif %}Search{% endblock %}
 
 {% load unicode %}
 {% load static from staticfiles %}
 
 {% block head %}
-  <style type="text/css">
-    .charview {
-        font-size: 300%;
-        text-align: center;
-    }
-  </style>
+    <style type="text/css">
+      .charview {
+          font-size: 300%;
+          text-align: center;
+      }
+    </style>
   {% if fonts %}
     <style type="text/css">
     .ajax_loader {
@@ -26,18 +26,14 @@
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
-    __loaded_fonts = false;
+    var __loaded_fonts = false;
     $(function() {
         if (!__loaded_fonts)
             $('body').append($('<div></div>').addClass('ajax_loader'));
     });
     WebFontConfig = {
       custom: {
-        families: [
-        {% for font in fonts %}
-          '{{ font.name }}',
-        {% endfor %}
-        ],
+        families: [{% for font in fonts %}'{{ font.name }}',{% endfor %}],
         urls: ['/fonts.css']
       },
       active: function() {
